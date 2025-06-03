@@ -85,10 +85,16 @@ export default function Dashboard() {
     };
   }>({});
 
+  const [sectors, setSectors] = useState<
+    { sector: string; price: number; change: number; percentChange: number }[]
+  >([]);
+
+  // Fetching data
   useEffect(() => {
-    const fetchData = async () => {
+    // Market Qoute Indices
+    const fetchMarketData = async () => {
       try {
-        const res = await fetch("/api/market-quote"); // GET request, no body
+        const res = await fetch("/api/market-quote");
         const jsonData = await res.json();
         setData({
           nifty: jsonData.indianMarkets?.nifty,
@@ -97,16 +103,34 @@ export default function Dashboard() {
             ...jsonData.usMarkets,
           },
         });
-        console.log("set data: ", data);
-        
+        console.log("Market Data Fetched: ", data);
       } catch (err) {
         console.error("Error fetching market data:", err);
       }
     };
 
-    fetchData();
-    const interval = setInterval(fetchData, 60000); // refresh every 60 sec
-    return () => clearInterval(interval);
+    // Sectoral Indices
+    const fetchSectors = async () => {
+      try {
+        const res = await fetch("/api/sectoral");
+        const jsonData = await res.json();
+        setSectors(jsonData.nse.slice(0, 4)); // Show top 4 NSE sectors in dashboard
+        console.log("Sectors Fetched:", jsonData);
+        console.log("Sectors state:", sectors);
+      } catch (err) {
+        console.error("Error fetching sectors:", err);
+      }
+    };
+
+    fetchMarketData();
+    fetchSectors();
+    const marketInterval  = setInterval(fetchMarketData, 60000); // refresh every 60 sec
+    const sectorInterval  = setInterval(fetchSectors, 60000);
+
+    return () => {
+      clearInterval(marketInterval);
+      clearInterval(sectorInterval);
+    }
   }, []);
 
   return (
@@ -262,10 +286,10 @@ export default function Dashboard() {
                       </div>
                     ))}
                 </div>
-                <div className="mt-4">
-                  <Button onClick={() => router.push("/global-indices")}>
-                    View More
-                  </Button>
+                <div className="mt-4 flex justify-end">
+                  <a href="/global-indices" className="text-sm text-blue-600 hover:underline">
+                    View more
+                  </a>
                 </div>
               </>
             ) : (
@@ -282,24 +306,36 @@ export default function Dashboard() {
             <CardTitle className="flex items-center gap-2">
               <Signal className="h-4 w-4" /> Sectoral Performance
             </CardTitle>
-            <CardDescription>Mock sector data</CardDescription>
+            <CardDescription>NSE sector data</CardDescription>
           </CardHeader>
           <CardContent className="text-sm">
             <ul className="space-y-1">
-              <li>
-                Banking: <span className="text-green-600">+1.2%</span>
-              </li>
-              <li>
-                IT: <span className="text-red-600">-0.8%</span>
-              </li>
-              <li>
-                Pharma: <span className="text-green-600">+0.5%</span>
-              </li>
-              <li>
-                Auto: <span className="text-green-600">+0.9%</span>
-              </li>
-              {/* TODO: Replace with real sectoral performance API */}
+              {sectors.length > 0 ? (
+                sectors.map((s) => (
+                  <li key={s.sector}>
+                    {s.sector}:{" "}
+                    <span
+                      className={
+                        s.change >= 0 ? "text-green-600" : "text-red-600"
+                      }
+                    >
+                      {s.percentChange >= 0 ? "+" : ""}
+                      {s.percentChange.toFixed(2)}%
+                    </span>
+                  </li>
+                ))
+              ) : (
+                <li>Loading sector data...</li>
+              )}
             </ul>
+            <div className="mt-4 flex justify-end">
+              <a
+                href="/sectoral-indices"
+                className="text-sm text-blue-600 hover:underline "
+              >
+                View all sectors
+              </a>
+            </div>
           </CardContent>
         </Card>
 
@@ -326,7 +362,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-      
     </div>
   );
 }

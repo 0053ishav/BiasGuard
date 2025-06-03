@@ -47,34 +47,36 @@ export async function GET() {
 
     ]);
 
+    console.log("data here: ", kospi)
+
     const data = {
       indianMarkets: {
-        nifty: { name: "Nifty 50", country: "India", price: nifty.regularMarketPrice, change: nifty.regularMarketChange, percentChange: nifty.regularMarketChangePercent, },
-        sensex: { name: "Sensex", country: "India", price: sensex.regularMarketPrice, change: sensex.regularMarketChange, percentChange: sensex.regularMarketChangePercent,},
+        nifty: { name: "Nifty 50", country: "India", price: nifty.regularMarketPrice, change: nifty.regularMarketChange, percentChange: nifty.regularMarketChangePercent, marketState: nifty.marketState},
+        sensex: { name: "Sensex", country: "India", price: sensex.regularMarketPrice, change: sensex.regularMarketChange, percentChange: sensex.regularMarketChangePercent, marketState: nifty.marketState},
       },
       usMarkets: {
-        dow: { name: "Dow Jones Industrial Average", country: "USA", price: dow.regularMarketPrice, change: dow.regularMarketChange, percentChange: dow.regularMarketChangePercent },
-        nasdaq: { name: "NASDAQ Composite", country: "USA", price: nasdaq.regularMarketPrice, change: nasdaq.regularMarketChange, percentChange: nasdaq.regularMarketChangePercent },
-        sp500: { name: "S&P 500", country: "USA", price: sp500.regularMarketPrice, change: sp500.regularMarketChange, percentChange: sp500.regularMarketChangePercent },
+        dow: { name: "Dow Jones Industrial Average", country: "USA", price: dow.regularMarketPrice, change: dow.regularMarketChange, percentChange: dow.regularMarketChangePercent, marketState: dow.marketState},
+        nasdaq: { name: "NASDAQ Composite", country: "USA", price: nasdaq.regularMarketPrice, change: nasdaq.regularMarketChange, percentChange: nasdaq.regularMarketChangePercent, marketState: nasdaq.marketState},
+        sp500: { name: "S&P 500", country: "USA", price: sp500.regularMarketPrice, change: sp500.regularMarketChange, percentChange: sp500.regularMarketChangePercent, marketState: sp500.marketState},
       },
       europeanMarkets: {
-        ftse: { name: "FTSE 100", country: "United Kingdom", price: ftse.regularMarketPrice, change: ftse.regularMarketChange, percentChange: ftse.regularMarketChangePercent },
-        dax: { name: "DAX", country: "Germany", price: dax.regularMarketPrice, change: dax.regularMarketChange, percentChange: dax.regularMarketChangePercent },
-        cac40: { name: "CAC 40", country: "France", price: cac40.regularMarketPrice, change: cac40.regularMarketChange, percentChange: cac40.regularMarketChangePercent },
-        ibex: { name: "IBEX 35", country: "Spain", price: ibex.regularMarketPrice, change: ibex.regularMarketChange, percentChange: ibex.regularMarketChangePercent },
-        euroStoxx50: { name: "Euro Stoxx 50", country: "Europe", price: euroStoxx50.regularMarketPrice, change: euroStoxx50.regularMarketChange, percentChange: euroStoxx50.regularMarketChangePercent },
+        ftse: { name: "FTSE 100", country: "United Kingdom", price: ftse.regularMarketPrice, change: ftse.regularMarketChange, percentChange: ftse.regularMarketChangePercent, marketState: ftse.marketState},
+        dax: { name: "DAX", country: "Germany", price: dax.regularMarketPrice, change: dax.regularMarketChange, percentChange: dax.regularMarketChangePercent, marketState: dax.marketState},
+        cac40: { name: "CAC 40", country: "France", price: cac40.regularMarketPrice, change: cac40.regularMarketChange, percentChange: cac40.regularMarketChangePercent, marketState: cac40.marketState},
+        ibex: { name: "IBEX 35", country: "Spain", price: ibex.regularMarketPrice, change: ibex.regularMarketChange, percentChange: ibex.regularMarketChangePercent, marketState: ibex.marketState},
+        euroStoxx50: { name: "Euro Stoxx 50", country: "Europe", price: euroStoxx50.regularMarketPrice, change: euroStoxx50.regularMarketChange, percentChange: euroStoxx50.regularMarketChangePercent, marketState: euroStoxx50.marketState},
       },
       asianMarkets: {
-        nikkei: { name: "Nikkei 225", country: "Japan", price: nikkei.regularMarketPrice, change: nikkei.regularMarketChange, percentChange: nikkei.regularMarketChangePercent },
-        hangSeng: { name: "Hang Seng", country: "Hong Kong", price: hangSeng.regularMarketPrice, change: hangSeng.regularMarketChange, percentChange: hangSeng.regularMarketChangePercent },
-        shanghai: { name: "Shanghai Composite", country: "China", price: shanghai.regularMarketPrice, change: shanghai.regularMarketChange, percentChange: shanghai.regularMarketChangePercent },
-        kospi: { name: "KOSPI", country: "South Korea", price: kospi.regularMarketPrice, change: kospi.regularMarketChange, percentChange: kospi.regularMarketChangePercent },
+        nikkei: { name: "Nikkei 225", country: "Japan", price: nikkei.regularMarketPrice, change: nikkei.regularMarketChange, percentChange: nikkei.regularMarketChangePercent, marketState: nikkei.marketState},
+        hangSeng: { name: "Hang Seng", country: "Hong Kong", price: hangSeng.regularMarketPrice, change: hangSeng.regularMarketChange, percentChange: hangSeng.regularMarketChangePercent, marketState: hangSeng.marketState},
+        shanghai: { name: "Shanghai Composite", country: "China", price: shanghai.regularMarketPrice, change: shanghai.regularMarketChange, percentChange: shanghai.regularMarketChangePercent, marketState: shanghai.marketState},
+        kospi: { name: "KOSPI", country: "South Korea", price: kospi.regularMarketPrice, change: kospi.regularMarketChange, percentChange: kospi.regularMarketChangePercent, marketState: kospi.marketState},
       },
       australianMarket: {
-        asx200: { name: "S&P/ASX 200", country: "Australia", price: asx200.regularMarketPrice, change: asx200.regularMarketChange, percentChange: asx200.regularMarketChangePercent },
+        asx200: { name: "S&P/ASX 200", country: "Australia", price: asx200.regularMarketPrice, change: asx200.regularMarketChange, percentChange: asx200.regularMarketChangePercent, marketState: asx200.marketState},
       },
       canadianMarket: {
-        tsx: { name: "S&P/TSX Composite", country: "Canada", price: tsx.regularMarketPrice, change: tsx.regularMarketChange, percentChange: tsx.regularMarketChangePercent },
+        tsx: { name: "S&P/TSX Composite", country: "Canada", price: tsx.regularMarketPrice, change: tsx.regularMarketChange, percentChange: tsx.regularMarketChangePercent, marketState: tsx.marketState},
       },
     };
 

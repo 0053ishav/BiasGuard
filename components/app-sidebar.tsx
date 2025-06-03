@@ -1,6 +1,6 @@
 "use client"
 
-import { Brain, FileText, Home, Settings, TrendingUp } from "lucide-react"
+import { Brain, FactoryIcon, FileText, Globe2, Home, Settings, TrendingUp } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -35,7 +35,12 @@ const navigation = [
   {
     title: "Global Indices",
     url: "/global-indices",
-    icon: Brain,
+    icon: Globe2,
+  },
+  {
+    title: "Sectoral Indices",
+    url: "/sectoral-indices",
+    icon: FactoryIcon,
   },
   {
     title: "Settings",

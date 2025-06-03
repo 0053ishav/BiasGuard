@@ -1,5 +1,15 @@
-'use client'
-import { Loader2, TriangleAlert } from "lucide-react";
+"use client";
+
+import TableSkeleton from "@/components/TableSkeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Loader2, TriangleAlert, Clock } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 type IndexData = {
@@ -8,6 +18,7 @@ type IndexData = {
   price: number;
   change: number;
   percentChange: number;
+  marketState: string;
 };
 
 type GlobalData = {
@@ -16,6 +27,7 @@ type GlobalData = {
   asianMarkets: Record<string, IndexData>;
   australianMarket: Record<string, IndexData>;
   canadianMarket: Record<string, IndexData>;
+  indianMarkets: Record<string, IndexData>;
 };
 
 export default function GlobalIndicesPage() {
@@ -39,68 +51,118 @@ export default function GlobalIndicesPage() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 gap-2">
-        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-        <p className="text-gray-600 text-sm">Loading global indices...</p>
-      </div>
-    );
-  }``
+ if (loading) {
+  return (
+    <main className="max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        🌐 Global Indices Overview
+      </h1>
+      {/* Show multiple skeleton tables for each market section */}
+      <TableSkeleton rows={2} />
+      <TableSkeleton rows={3} />
+      <TableSkeleton rows={5} />
+      <TableSkeleton rows={4} />
+      <TableSkeleton rows={1} />
+      <TableSkeleton rows={1} />
+          </main>
+  );
+}
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-2">
-        <TriangleAlert className="h-6 w-6 text-red-600" />
-        <p className="text-red-600 font-semibold">{error}</p>
+        <TriangleAlert className="h-6 w-6 text-destructive" />
+        <p className="text-destructive font-semibold">{error}</p>
       </div>
     );
   }
 
+  function getClockColor(marketState: string): string | null {
+    switch (marketState) {
+      case "REGULAR":
+        return "text-green-500";
+      case "PRE":
+        return "text-yellow-500";
+      case "POST":
+        return "text-yellow-500";
+      case "PREPRE":
+      case "POSTPOST":
+      case "HOLIDAY":
+        return "text-red-500";
+      default:
+        return null;
+    }
+  }
+
   const renderTable = (title: string, data: Record<string, IndexData>) => (
     <section className="mb-12">
-      <h2 className="text-2xl font-semibold mb-4 ">{title}</h2>
-      <div className="overflow-x-auto rounded-lg shadow border border-gray-200">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-100 text-gray-600">
-            <tr>
-              <th className="px-4 py-3 text-left font-medium uppercase">Index</th>
-              <th className="px-4 py-3 text-left font-medium uppercase">Country</th>
-              <th className="px-4 py-3 text-right font-medium uppercase">Price</th>
-              <th className="px-4 py-3 text-right font-medium uppercase">Change</th>
-              <th className="px-4 py-3 text-right font-medium uppercase">% Change</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+      <h2 className="text-2xl font-semibold mb-4">{title}</h2>
+      <div className="rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-left">Index</TableHead>
+              <TableHead className="text-left">Country</TableHead>
+              <TableHead className="text-right">Price</TableHead>
+              <TableHead className="text-right">Change</TableHead>
+              <TableHead className="text-right">% Change</TableHead>
+              {/* <TableHead className="text-right">Market State</TableHead> */}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {Object.entries(data).map(([key, index]) => {
               const isPositive = index.change >= 0;
+              const clockColor = getClockColor(index.marketState);
               return (
-                <tr key={key} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-semibold text-gray-900">{index.name}</td>
-                  <td className="px-4 py-3 text-gray-600">{index.country}</td>
-                  <td className="px-4 py-3 text-right font-mono text-gray-900">{index.price.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-right">
-                    <span className={`inline-flex items-center gap-1 font-bold ${isPositive ? "text-green-600" : "text-red-600"}`}>
+                <TableRow key={key}>
+                  <TableCell className="font-semibold flex items-center gap-1">
+                    {clockColor && (
+                      <Clock className={`h-4 w-4 ${clockColor}`} />
+                    )}
+                    {index.name}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {index.country}
+                  </TableCell>
+                  <TableCell className="text-right font-mono">
+                    {index.price.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <span
+                      className={`inline-flex items-center gap-1 font-bold ${
+                        isPositive ? "text-positive" : "text-negative"
+                      }`}
+                    >
                       {isPositive ? "▲" : "▼"} {index.change.toFixed(2)}
                     </span>
-                  </td>
-                  <td className={`px-4 py-3 text-right font-bold ${isPositive ? "text-green-600" : "text-red-600"}`}>
+                  </TableCell>
+                  <TableCell
+                    className={`text-right font-bold ${
+                      isPositive ? "text-positive" : "text-negative"
+                    }`}
+                  >
                     {index.percentChange.toFixed(2)}%
-                  </td>
-                </tr>
+                  </TableCell>
+                  {/* <TableCell className="text-right text-muted-foreground uppercase font-mono">
+                    {index.marketState}
+                  </TableCell> */}
+                </TableRow>
               );
             })}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </section>
   );
 
   return (
     <main className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8 text-center">🌐 Global Indices Overview</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        🌐 Global Indices Overview
+      </h1>
       {globalData && (
         <>
+          {renderTable("Indian Markets", globalData.indianMarkets)}
           {renderTable("US Markets", globalData.usMarkets)}
           {renderTable("European Markets", globalData.europeanMarkets)}
           {renderTable("Asian Markets", globalData.asianMarkets)}
